@@ -6,7 +6,7 @@ This is an experimental project for the Austin [Bleeding Edge Web](http://www.me
 
 ## Specs
 
-To implement Groopy in your technology of choice, please check out the [specs](https://github.com/groopy/examples/wiki/Application-Specs) as your starting point.
+To implement the Groops app in your technology of choice, please check out the [specs](https://github.com/groopy/examples/wiki/Application-Specs) as your starting point.
 
 ## License
 
