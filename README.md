@@ -1,4 +1,4 @@
-# Groopy
+# Groops
 
 This is a set of sample applications used for comparing different web app frameworks. It is a simple, on-demand virtual meeting room application. The goal is to provide canonical examples of both server-side and client-side components, in different technologies, that can be mixed and matched through a common API.
 
