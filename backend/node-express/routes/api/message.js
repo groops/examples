@@ -35,6 +35,17 @@ module.exports = function(app){
     app.db.messages.save(data,function(err){
       if (err) {return res.send(500,{error:err.message});}
       isDev && console.log('Created message '+doc._id);
+
+      data.id = doc._id;
+
+      // Let the room know a new message was created
+      Object.keys(app.rooms[req.params.id]||{}).forEach(function(user){
+        app.rooms[req.params.id][user].emit('message',{
+          action: 'create',
+          message: data
+        });
+      });
+
       res.send(201,{id: doc._id});
     });
   });

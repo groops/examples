@@ -89,7 +89,7 @@ module.exports = function(app){
 
       // Identify users that room no longer exists
       Object.keys(app.rooms[req.params.id]||{}).forEach(function(user){
-        user.emit('room',{
+        app.rooms[req.params][user].emit('room',{
           action: 'close',
           id: req.params.id
         });
