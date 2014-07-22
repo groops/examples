@@ -1,7 +1,51 @@
 module.exports = function(app){
 
-  app.post('/api/room/:id/message', function(req, res) {
-    res.send(501);
+  // Helper
+  var isDev = app.get('env') === 'development';
+
+  // Get messages for a specific room
+  app.get('/api/room/:id/messages', function(req,res){
+    app.db.rooms.find({room:app.db.ObjectID(req.params.id)}).toArray(function(err,docs){
+      res.send(docs.map(function(el){
+        el.id = el._id;
+        delete el._id;
+      }));
+    });
+    isDev && console.log('Retrieved messages for room '+req.params.id);
   });
 
-};
+  // Get a specific message
+  app.get('/api/message/:id', function(req,res){
+    app.db.rooms.find({_id:app.db.ObjectID(req.params.id)}).toArray(function(err,docs){
+      res.send(docs.map(function(el){
+        el.id = el._id;
+        delete el._id;
+      })[0]);
+    });
+    isDev && console.log('Retrieved messages for message '+req.params.id);
+  });
+
+  // Create a message in a specific room
+  app.post('/api/room/:id/message', function(req,res){
+    var data = {
+      content: req.body.message,
+      created: new Date()
+    };
+    app.db.messages.save(data,function(err){
+      if (err) {return res.send(500,{error:err.message});}
+      isDev && console.log('Created message '+doc._id);
+      res.send(201,{id: doc._id});
+    });
+  });
+
+  // Remove a message
+  app.delete('/api/message/:id', function(req,res){
+    app.db.messages.remove({_id:app.db.ObjectID(req.params.id)},function(err,result){
+      if (err){
+        return res.send(500,'Could not remove message '+req.params.id);
+      }
+      isDev && console.log('Removed message '+req.params.id);
+      res.send(200);
+    });
+  });
+}

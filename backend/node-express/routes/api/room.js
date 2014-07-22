@@ -21,17 +21,6 @@ module.exports = function(app){
   });
 
 
-  // Get messages for a specific room
-  app.get('/api/room/:id/messages', function(req,res){
-    var msg = app.db.rooms.find({_id:app.db.ObjectID(req.params.id)},{messages:1});
-    console.log(msg);
-    res.send(msg.map(function(el){
-      el.id = el._id;
-      delete el._id;
-    }));
-  });
-
-
   // Get a specific room
   app.get('/api/room/:id', function(req, res) {
     app.db.rooms.findOne({_id: app.db.ObjectID(req.params.id) },function(err,doc){
@@ -98,5 +87,4 @@ module.exports = function(app){
       res.send(200);
     });
   });
-
 }
