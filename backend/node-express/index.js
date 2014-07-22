@@ -15,7 +15,6 @@ var path = require('path');
 // Prepare a MongoDB client
 var MongoConnection = require('./lib/db'), database;
 
-
 // Instantiate an instance of Express
 var app = express();
 
@@ -85,8 +84,13 @@ database.connect(function(){
   app.db = database;
   console.log(('Database:    '+(database.server+':'+database.port+'/'+database.database).bold).cyan);
 
+  // 2. Setup websockets
+  var http = require('http').Server(app);
+  app.io = require('socket.io')(http);
+  require('./lib/ws.js')(app);
+
   // 2. Launch the server
-  var server = app.listen(process.env.PORT||8000,function(){
+  var server = http.listen(process.env.PORT||8000,function(){
     console.log('HTTP Server: '.green+('http://'+ip.address()+':'+server.address().port.toString()).bold.green+' in '.green+app.get('env').bold.yellow+' mode.'.green);
   });
 });
