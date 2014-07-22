@@ -20,7 +20,7 @@ var Class = function(config){
   this.ObjectID = require('mongodb').ObjectID;
 
   this.connect = function(callback) {
-    mongoclient.connect('mongodb://'+this.username+':'+process.env.mongopass+'@'+this.server+':'+this.port.toString()+'/'+this.database, { auto_reconnect: true }, function(err, db){
+    mongoclient.connect('mongodb://'+this.username+':'+this.password+'@'+this.server+':'+this.port.toString()+'/'+this.database, { auto_reconnect: true }, function(err, db){
 
       if(err) throw err;
 
