@@ -27,6 +27,7 @@ app.use(bodyParser.json());
 
 // Support URL encoding
 app.use(bodyParser.urlencoded());
+app.use(bodyParser());
 
 // Support cookies
 app.use(cookieParser());
