@@ -9,6 +9,7 @@ var Class = function(config){
 
   // Basic Mongo configuration
   this.username = config.username;
+  this.password = config.password;
   this.server = config.host;
   this.port = config.port;
   this.database = config.database;
