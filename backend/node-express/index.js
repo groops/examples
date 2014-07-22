@@ -12,22 +12,29 @@ var bodyParser = require('body-parser');
 var ip = require('ip');
 // The standard node.js path module is used multiple times, so it's easier to store it in a reference variable.
 var path = require('path');
+// Set up in-memory session support
+var session = require('express-session')
 // Prepare a MongoDB client
 var MongoConnection = require('./lib/db'), database;
 
 // Instantiate an instance of Express
 var app = express();
 
+// Enable JSON (Ajax) and url-encoded body parsing so that
+// we can access POST data as `req.body` in route handlers
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+
+// Set up session (will be available in every request as `req.session`)
+app.use(session({
+  secret: 'groopy!'
+}));
+
 // Configure Express to render EJS templates
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-
-// Add JSON body parsing (for use with the API/AJAX)
-app.use(bodyParser.json());
-
-// Support URL encoding
-app.use(bodyParser.urlencoded());
-app.use(bodyParser());
 
 // Support cookies
 app.use(cookieParser());
