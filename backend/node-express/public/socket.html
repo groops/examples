@@ -3,7 +3,39 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
       var socket = io();
+
+      // Join a room
+      socket.emit('join',{
+        room: '53cdd1fa26c24d80310d2868',
+        user: '53cecd4e7dc20da430b2e177'
+      });
+
+      // Once the user has joined a room, setup a proper communication channel
+      socket.on('joined',function(){
+
+        // When a message changes state, update the UI accordingly
+        socket.on('message',function(data){
+          if (data.action === 'created'){
+            console.log('Message created',data);
+          } else {
+            console.log('Message removed',data);
+          }
+        });
+
+        /**
+         * Right now this will only fire when a room closes. "data" will just be a string with the ID of the room.
+         */
+        socket.on('room',function(data){
+          console.log('Room closed',data);
+        });
+
+      });
+
+      // If there's an error, let the user know
+      socket.on('exception',function(msg){
+        alert(msg);
+      });
+
     </script>
   </body>
 </html>
-Socket goes here.

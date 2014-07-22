@@ -29,6 +29,7 @@ module.exports = function(app){
   app.post('/api/room/:id/message', function(req,res){
     var data = {
       content: req.body.message,
+      room: app.db.ObjectID(req.params.id),
       created: new Date()
     };
     app.db.messages.save(data,function(err){
@@ -40,11 +41,23 @@ module.exports = function(app){
 
   // Remove a message
   app.delete('/api/message/:id', function(req,res){
+    // Retrieve the room ID of the message to be removed
+    var msg = app.db.messages.findOne({_id:app.db.ObjectID(req.params.id)},{room: 1});
+
     app.db.messages.remove({_id:app.db.ObjectID(req.params.id)},function(err,result){
       if (err){
         return res.send(500,'Could not remove message '+req.params.id);
       }
       isDev && console.log('Removed message '+req.params.id);
+
+      // Alert all users of the removed message
+      Object.keys(app.rooms[req.params.id]||{}).forEach(function(user){
+        app.rooms[msg.room.id][user].emit('message',{
+          action: 'remove',
+          message: req.params.id
+        });
+      });
+
       res.send(200);
     });
   });

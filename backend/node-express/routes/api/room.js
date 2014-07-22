@@ -14,7 +14,7 @@ module.exports = function(app){
           id: el._id,
           name: el.name,
           messages: el.messages.length || 0,
-          users: el.users.length || 0
+          users: Object.keys(app.rooms[el._id] || {}).length
         }
       }));
     });
@@ -30,6 +30,9 @@ module.exports = function(app){
       // Cleanup
       doc.id = doc._id;
       delete doc._id;
+
+      // Add current users to the result
+      doc.users = app.rooms[el._id] || {};
 
       res.send(doc);
     })
@@ -61,7 +64,6 @@ module.exports = function(app){
   app.put('/api/room/:id', function(req, res) {
     // Save the data to Mongo and send the user ID as a result.
     app.db.users.update({_id:app.db.ObjectID(req.params.id)},{$set: {name:req.body.name}},{},function(err,doc){
-      console.log(arguments);
       // If there is an error, send a 500 and error message.
       if (err) { return res.send(500,{error:err.message}); }
 
@@ -84,6 +86,16 @@ module.exports = function(app){
         return res.send(500,'Could not remove room '+req.params.id);
       }
       isDev && console.log('Removed room '+req.params.id);
+
+      // Identify users that room no longer exists
+      Object.keys(app.rooms[req.params.id]||{}).forEach(function(user){
+        user.emit('room',{
+          action: 'close',
+          id: req.params.id
+        });
+      });
+      // Remove the room
+      delete app.rooms[req.params.id];
       res.send(200);
     });
   });
