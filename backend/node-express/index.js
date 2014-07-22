@@ -37,7 +37,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Identify whether the app will run in development or production mode. Defaults to production.
-app.set('env',process.env.ENV||'production');
+app.set('env',config.mode||process.env.ENV||'production');
 
 // Include our custom routes for the API and template server
 require('./routes/api')(app);

@@ -1,4 +1,5 @@
 {
+  "mode": "development",
   "mongo": {
     "host": "",
     "port": 33178,
