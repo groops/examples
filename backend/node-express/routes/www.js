@@ -1,26 +1,51 @@
 var gravatar = require('gravatar'),
-    bodyParser = require('body-parser');
+    request = require('request');
 
 module.exports = function(app){
 
-  app.use(bodyParser());
-
-  // Inde Page
+  // Handle navigation to the index page
   app.get('/', function(req, res) {
-    res.render('intro', { title: 'Groops' });
-  });
-
-  // Intro Page
-  app.post('/main', function(req, res) {
-    console.log("BODY",req.body);
-    res.render('main',{
-      title: 'Available Groops',
-      name: 'Person Name',
-      email: 'me@domain.com',
-      twitter: 'someone',
-      profilepic: 'test',//gravatar()
-      rooms: []
+    res.render('intro', {
+      title: 'Groops'
     });
   });
 
+  // Handle navigation to the main page
+  app.get('/main', function(req, res) {
+    // var user = req.session('user');
+    console.log(req.session.user);
+
+    if (req.session.user) {
+      res.render('main', {
+        title: 'Groops List',
+        user: req.session.user,
+        rooms: []
+      });
+    }
+    else {
+      res.redirect('/');
+    }
+  });
+
+  // Handle intro page form submission
+  app.post('/register', function(req, res) {
+    var userInfo = req.body;
+
+    // console.log(userInfo);
+
+    request.post('http://localhost:8000/api/user', {
+      form: userInfo
+    },
+    function (err, response, data) {
+      if (err) {
+        console.log('error: ' + err);
+        return res.send(500, err);
+      }
+      req.session.user = userInfo;
+      req.session.user.id = data.id;
+      req.session.user.gravatarUrl = gravatar.url('brian@moeskau.com', {s: '100'});
+
+      res.redirect('/main');
+    })
+  });
 };
