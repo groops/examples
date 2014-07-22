@@ -13,7 +13,7 @@ module.exports = function(app){
   // Intro Page
   app.post('/main', function(req, res) {
     console.log("BODY",req.body);
-    res.render('entry',{
+    res.render('main',{
       title: 'Available Groops',
       name: 'Person Name',
       email: 'me@domain.com',
