@@ -12,9 +12,6 @@ module.exports = function(app){
 
   // Handle navigation to the main page
   app.get('/main', function(req, res) {
-    // var user = req.session('user');
-    console.log(req.session.user);
-
     if (req.session.user) {
       res.render('main', {
         title: 'Groops List',
