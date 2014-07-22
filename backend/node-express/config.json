@@ -1,0 +1,9 @@
+{
+  "mongo": {
+    "host": "",
+    "port": 33178,
+    "database": "groops",
+    "username": "",
+    "password": ""
+  }
+}

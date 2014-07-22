@@ -1,24 +1,17 @@
 // Create the MongoDB client
-var mongoclient = require('mongodb').MongoClient,
-    util = require('./utilities');
-
-// Make sure all the appropriate environment variables are available.
-if (!util.process.hasAll('mongouser','mongopass','mongoserver','mongoport','mongodb')){
-  console.log('Invalid or incomplete MongoDB configuration.');
-  process.exit(1);
-}
+var mongoclient = require('mongodb').MongoClient;
 
 /**
  * The DB class is a wrapper around the MongoDB store.
  */
-var Class = function(){
+var Class = function(config){
   var me = this;
 
   // Basic Mongo configuration
-  this.username = process.env.mongouser;
-  this.server = process.env.mongoserver;
-  this.port = process.env.mongoport;
-  this.database = process.env.mongodb;
+  this.username = config.username;
+  this.server = config.host;
+  this.port = config.port;
+  this.database = config.database;
   this.raw = null;
 
   // This is a helper method for generating MongoDB ID's.

@@ -1,5 +1,7 @@
 // Add some coloring to our console to make output more readable.
 require('colors');
+// Import the configuration
+var config = require('./config.json');
 // Express provides really basic HTTP services
 var express = require('express');
 // Express 4.x does not support cookie parsing by default, so it's added as another dependency.
@@ -11,8 +13,7 @@ var ip = require('ip');
 // The standard node.js path module is used multiple times, so it's easier to store it in a reference variable.
 var path = require('path');
 // Prepare a MongoDB client
-var MongoConnection = require('./lib/db'),
-    database = new MongoConnection();
+var MongoConnection = require('./lib/db'), database;
 
 
 // Instantiate an instance of Express
@@ -69,9 +70,15 @@ app.use(function (err, req, res, next) {
   });
 });
 
-
+// Use environment variables for the configuration if available
+config.mongo.username = process.env.mongouser || config.mongo.username || '';
+config.mongo.password = process.env.mongopass || config.mongo.password || '';
+config.mongo.host = process.env.mongoserver || config.mongo.host || '';
+config.mongo.port = process.env.mongoport || config.mongo.port || 33178;
+config.mongo.database = process.env.mongodb || config.mongo.database || 'groops';
 
 // 1. Establish a connection to the Mongo database
+database = new MongoConnection(config.mongo);
 database.connect(function(){
 
   // Create a reference to the database available to the express app
