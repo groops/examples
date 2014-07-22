@@ -29,6 +29,15 @@
           console.log('Room closed',data);
         });
 
+        // When a user's status changes, update the UI accordingly
+        socket.on('user', function(data){
+          if (data.action === 'join'){
+            console.log('A new user joined the room',data);
+          } else {
+            console.log('A user left the room',data);
+          }
+        });
+
       });
 
       // If there's an error, let the user know

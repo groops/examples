@@ -1,3 +1,5 @@
+var gravatar = require('gravatar');
+
 module.exports = function(app){
 
   app.rooms = {};
@@ -18,7 +20,7 @@ module.exports = function(app){
         // Alert users of the room that someone has left the room
         Object.keys(rm).forEach(function(room){
           rm[room].emit('user',{
-            action: 'remove',
+            action: 'leave',
             user: socket.userid
           });
         });
@@ -41,6 +43,9 @@ module.exports = function(app){
         var usr = doc[0];
         usr.id = usr._id;
         delete usr._id;
+
+        // Add the profile pic
+        usr.profilepic = gravatar.url(usr.email);
 
         // Notify everyone in the room that the new user joined.
         Object.keys(app.rooms[data.room]).forEach(function(user){
