@@ -5,10 +5,11 @@ module.exports = function(app){
 
   // Get messages for a specific room
   app.get('/api/room/:id/messages', function(req,res){
-    app.db.rooms.find({room:app.db.ObjectID(req.params.id)}).toArray(function(err,docs){
+    app.db.messages.find({room:app.db.ObjectID(req.params.id)}).toArray(function(err,docs){
       res.send(docs.map(function(el){
         el.id = el._id;
         delete el._id;
+        return el;
       }));
     });
     isDev && console.log('Retrieved messages for room '+req.params.id);
@@ -16,13 +17,14 @@ module.exports = function(app){
 
   // Get a specific message
   app.get('/api/message/:id', function(req,res){
-    app.db.rooms.find({_id:app.db.ObjectID(req.params.id)}).toArray(function(err,docs){
+    app.db.messages.find({_id:app.db.ObjectID(req.params.id)}).toArray(function(err,docs){
       res.send(docs.map(function(el){
         el.id = el._id;
         delete el._id;
+        return el;
       })[0]);
     });
-    isDev && console.log('Retrieved messages for message '+req.params.id);
+    isDev && console.log('Retrieved message '+req.params.id);
   });
 
   // Create a message in a specific room
@@ -35,9 +37,7 @@ module.exports = function(app){
     app.db.messages.save(data,function(err,doc){
       if (err) {return res.send(500,{error:err.message});}
       isDev && console.log('Created message '+doc._id);
-
       data.id = doc._id;
-      delete data._id;
 
       // Let the room know a new message was created
       Object.keys(app.rooms[req.params.id]||{}).forEach(function(user){
