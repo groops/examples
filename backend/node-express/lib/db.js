@@ -30,6 +30,7 @@ var Class = function(config){
       me.raw = db; // Reference to the raw DB
       me.users = db.collection('users'); // Reference to the users collection
       me.rooms = db.collection('rooms'); // Reference to the rooms collection
+      me.messages = db.collection('messages'); // Reference to the messages collection
 
       // Monitor the DB to assure the connection doesn't close (keepalive)
       setInterval(function(){

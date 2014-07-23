@@ -7,7 +7,7 @@
       // Join a room
       socket.emit('join',{
         room: '53cdd1fa26c24d80310d2868',
-        user: '53cecd4e7dc20da430b2e177'
+        user: window.location.search.split('user=')[1] //'53cecd4e7dc20da430b2e177'
       });
 
       // Once the user has joined a room, setup a proper communication channel
@@ -15,7 +15,7 @@
 
         // When a message changes state, update the UI accordingly
         socket.on('message',function(data){
-          if (data.action === 'created'){
+          if (data.action === 'create'){
             console.log('Message created',data);
           } else {
             console.log('Message removed',data);

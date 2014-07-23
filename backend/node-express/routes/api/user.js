@@ -1,3 +1,5 @@
+var gravatar = require('gravatar');
+
 module.exports = function(app){
 
   // Helper
@@ -13,6 +15,8 @@ module.exports = function(app){
       doc.id = doc._id;
       delete doc._id;
 
+      doc.profilepic = gravatar.url(doc.email, {s: '100'});
+
       res.send(doc);
     });
   });
@@ -25,7 +29,7 @@ module.exports = function(app){
     var data = {
       name: req.body.name,
       email: req.body.email,
-      twitter: req.body.twitter
+      twitter: req.body.twitter.replace('@','')
     };
 
     // Save the data to Mongo and send the user ID as a result.
@@ -35,7 +39,7 @@ module.exports = function(app){
 
       // If the new user is created successfully, send a 201 and the new user ID
       isDev && console.log('Created user: \n'+JSON.stringify(data,null,2)+'\nID: '+doc._id);
-      res.send(201,{id: doc._id});
+      res.send(201,{id: doc._id,profilepic:gravatar.url(req.body.email, {s: '100'})});
     });
   });
 

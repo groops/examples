@@ -56,8 +56,10 @@ module.exports = function(app){
         });
 
         // Associate the user ID with the socket
-        app.rooms[data.room][data.user] = socket;
-        app.users[data.user] = data.room;
+        app.rooms[data.room][usr.id] = socket;
+        app.users[usr.id] = data.room;
+
+        socket.emit('joined',data.room);
 
         console.log('User '+data.user+' joined the '+data.room+' room.');
       });

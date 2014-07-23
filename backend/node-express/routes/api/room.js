@@ -81,22 +81,26 @@ module.exports = function(app){
 
   // Remove room
   app.delete('/api/room/:id', function(req, res) {
-    app.db.rooms.remove({_id:app.db.ObjectID(req.params.id)},function(err,result){
-      if (err){
-        return res.send(500,'Could not remove room '+req.params.id);
-      }
-      isDev && console.log('Removed room '+req.params.id);
-
-      // Identify users that room no longer exists
-      Object.keys(app.rooms[req.params.id]||{}).forEach(function(user){
-        app.rooms[req.params][user].emit('room',{
-          action: 'close',
-          id: req.params.id
-        });
-      });
+    // First remove all messages associated with the room
+    app.db.messages.remove({room:app.db.ObjectID(req.params.id)},function(_err,msg_result){
       // Remove the room
-      delete app.rooms[req.params.id];
-      res.send(200);
+      app.db.rooms.remove({_id:app.db.ObjectID(req.params.id)},function(err,result){
+        if (err){
+          return res.send(500,'Could not remove room '+req.params.id);
+        }
+        isDev && console.log('Removed room '+req.params.id);
+
+        // Identify users that room no longer exists
+        Object.keys(app.rooms[req.params.id]||{}).forEach(function(user){
+          app.rooms[req.params][user].emit('room',{
+            action: 'close',
+            id: req.params.id
+          });
+        });
+        // Remove the room
+        delete app.rooms[req.params.id];
+        res.send(200);
+      });
     });
   });
 }
