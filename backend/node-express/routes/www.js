@@ -1,5 +1,6 @@
 var gravatar = require('gravatar'),
-    request = require('request');
+    request = require('request'),
+    _ = require('underscore');
 
 module.exports = function(app){
 
@@ -15,10 +16,21 @@ module.exports = function(app){
   // Handle navigation to the main page
   app.get('/main', function(req, res) {
     if (req.session.user) {
-      res.render('main', {
-        title: 'Groops List',
-        user: req.session.user,
-        rooms: []
+      request.get(apiRoot + 'rooms', function(err, response, data) {
+        if (err) {
+          console.log('error getting rooms: ' + err);
+          return res.send(500, err);
+        }
+        var rooms = _.sortBy(JSON.parse(data), function(room) {
+          // Returns the rooms sorted by room name, case-insensitive
+          return room.name.toLowerCase();
+        });
+
+        res.render('main', {
+          title: 'Groops List',
+          user: req.session.user,
+          rooms: rooms
+        });
       });
     }
     else {
@@ -26,6 +38,7 @@ module.exports = function(app){
     }
   });
 
+  // Navigation to a specific room by id
   app.get('/room/:id', function(req, res) {
     res.send(200, 'In room ' + req.params.id);
   });
@@ -41,7 +54,7 @@ module.exports = function(app){
     },
     function (err, response, data) {
       if (err) {
-        console.log('error: ' + err);
+        console.log('error registering: ' + err);
         return res.send(500, err);
       }
       data = JSON.parse(data);
@@ -63,7 +76,7 @@ module.exports = function(app){
     },
     function (err, response, data) {
       if (err) {
-        console.log('error: ' + err);
+        console.log('error creating room: ' + err);
         return res.send(500, err);
       }
       data = JSON.parse(data);
