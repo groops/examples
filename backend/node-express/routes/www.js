@@ -22,8 +22,8 @@ module.exports = function(app){
           return res.send(500, err);
         }
         var rooms = _.sortBy(JSON.parse(data), function(room) {
-          // Returns the rooms sorted by room name, case-insensitive
-          return room.name.toLowerCase();
+          // Returns rooms sorted by the number of users (descending)
+          return -room.users;
         });
 
         res.render('main', {
