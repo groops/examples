@@ -1,3 +1,6 @@
+/*
+ General styles and bootstrap overrides
+ */
 thead td {
   font-weight: bold;
 }
@@ -8,9 +11,31 @@ td.centered {
   padding-left: 35px;
   padding-right: 35px;
 }
+
+/*
+ Main view
+ */
 #main .grp-gravatar {
   height: 100;
   width: 100;
   float: left;
   border-radius: 5px;
+}
+
+/*
+ Room view
+ */
+#room .navbar-default {
+  background: #deeaf3;
+  padding: 3px 5px 5px;
+  min-height: inherit;
+  color: #555;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#room .grp-room-name {
+  font-size: 20px;
+  font-weight: bold;
+  padding-left: 5px;
 }

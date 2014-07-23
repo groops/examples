@@ -1,8 +1,14 @@
 <% include partials/header %>
 
-  <div id="login" class="container">
-    <h1><%= room.name %></h1>
-    <a href="/main">Back to List</a>
+  <div id="room">
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <a href="/main" class="btn btn-sm btn-default" title="Back to list"><span class="glyphicon glyphicon-chevron-left"></span></a>
+      <span class="grp-room-name"><%= room.name %></span>
+    </div>
+
+    <div class="body">
+
+    </div>
   </div>
 
 <% include partials/footer %>
