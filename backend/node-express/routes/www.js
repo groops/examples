@@ -1,10 +1,17 @@
 var gravatar = require('gravatar'),
     request = require('request'),
-    _ = require('underscore');
+    _ = require('underscore'),
+    url = require('url');
 
 module.exports = function(app){
 
-  var apiRoot = 'http://localhost:8000/api/';
+  function getApiPath(req, path) {
+    var parts = url.parse(req.headers.referer),
+      path = 'http://' + parts.host + '/api/' + path;
+
+    // console.log('calling API: ' + path);
+    return path;
+  }
 
   // Handle navigation to the index page
   app.get('/', function(req, res) {
@@ -16,7 +23,7 @@ module.exports = function(app){
   // Handle navigation to the main page
   app.get('/main', function(req, res) {
     if (req.session.user) {
-      request.get(apiRoot + 'rooms', function(err, response, data) {
+      request.get(getApiPath(req, 'rooms'), function(err, response, data) {
         if (err || response.statusCode === 500) {
           console.log('error getting rooms: ' + err || response.error);
           return res.send(500, err);
@@ -44,7 +51,7 @@ module.exports = function(app){
       return res.redirect('/main');
     }
     if (req.params.id) {
-      request.get(apiRoot + 'room/' + req.params.id, function(err, response, data) {
+      request.get(getApiPath(req, 'room/' + req.params.id), function(err, response, data) {
         if (err || response.statusCode === 500) {
           console.log('error getting room ' + req.params.id + ': ' + err || response.error);
           return res.redirect('/main');
@@ -56,7 +63,7 @@ module.exports = function(app){
         }
         var room = JSON.parse(data);
 
-        request.get(apiRoot + 'room/' + req.params.id + '/messages', function(err, response, messages) {
+        request.get(getApiPath(req, 'room/' + req.params.id) + '/messages', function(err, response, messages) {
           if (err || response.statusCode === 500) {
             console.log('error getting messages: ' + err || response.error);
             return res.send(500, err);
@@ -85,7 +92,7 @@ module.exports = function(app){
       userInfo.twitter = userInfo.twitter.replace('@','');
     }
 
-    request.post(apiRoot + 'user', {
+    request.post(getApiPath(req, 'user'), {
       form: userInfo
     },
     function (err, response, data) {
@@ -105,7 +112,7 @@ module.exports = function(app){
 
   // Handle room creation request
   app.post('/create-room', function(req, res) {
-    request.post(apiRoot + 'room', {
+    request.post(getApiPath(req, 'room'), {
       form: {
         name: req.body.room_name
       }
