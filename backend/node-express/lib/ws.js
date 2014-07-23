@@ -47,6 +47,8 @@ module.exports = function(app){
         // Add the profile pic
         usr.profilepic = gravatar.url(usr.email);
 
+        socket.userdata = usr;
+
         // Notify everyone in the room that the new user joined.
         Object.keys(app.rooms[data.room]).forEach(function(user){
           app.rooms[data.room][user].emit('user',{

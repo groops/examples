@@ -45,7 +45,8 @@
         method: 'POST',
         context: this,
         data: {
-          message: msg
+          message: msg,
+          author: '<%= user_id %>'
         }
       })
         .success(function (data) {
@@ -81,7 +82,7 @@
       socket.on('message',function(data){
         if (data.action === 'create'){
           console.log('Message created', data);
-          $('#messages > tbody:last').append('<tr><td>' + data.message.content + '</td></tr>');
+          $('#messages > tbody:last').append('<tr><td><img src="'+data.message.author.pic+'" align="left" style="margin-right: 8px;" height="60"/>' + data.message.content + '</td></tr>');
           scrollBody();
         }
       });

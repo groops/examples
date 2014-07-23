@@ -1,3 +1,5 @@
+var gravatar = require('gravatar');
+
 module.exports = function(app){
 
   // Helper
@@ -32,7 +34,11 @@ module.exports = function(app){
     var data = {
       content: req.body.message,
       room: app.db.ObjectID(req.params.id),
-      created: new Date()
+      created: new Date(),
+      author: {
+        id: req.body.author,
+        img: app.rooms[req.params.id][req.body.author].userdata.profilepic
+      }
     };
     app.db.messages.save(data,function(err,doc){
       if (err) {return res.send(500,{error:err.message});}
