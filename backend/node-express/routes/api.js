@@ -4,12 +4,12 @@
 module.exports = function(app){
 
   // Include user routes
-  require('./api/user')(app);
+  require('../api/user')(app);
 
   // Include room routes
-  require('./api/room')(app);
+  require('../api/room')(app);
 
   // Include messages
-  require('./api/message')(app);
+  require('../api/message')(app);
 
 };
