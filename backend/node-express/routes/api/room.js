@@ -32,7 +32,7 @@ module.exports = function(app){
       delete doc._id;
 
       // Add current users to the result
-      doc.users = app.rooms[el._id] || {};
+      doc.users = app.rooms[doc._id] || {};
 
       res.send(doc);
     })
