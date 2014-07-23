@@ -4,6 +4,10 @@ thead td {
 td.centered {
   text-align: center;
 }
+.container {
+  padding-left: 35px;
+  padding-right: 35px;
+}
 #main .grp-gravatar {
   height: 100;
   width: 100;
