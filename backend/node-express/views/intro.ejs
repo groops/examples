@@ -10,6 +10,8 @@
 
     <div class="row">
       <form class="form-horizontal" role="form" action="./register" method="POST">
+        <input type="hidden" name="_csrf" value="<%= csrf_token %>">
+
         <div class="form-group">
           <label for="name" class="col-sm-2 control-label">Name</label>
           <div class="col-sm-8">

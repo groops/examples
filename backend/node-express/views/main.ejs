@@ -15,14 +15,31 @@
     </div>
 
     <div class="row" style="padding-top:25px;">
-      <button class="btn btn-primary">Create a Room</button>
+      <div class="col-md-6">
+        <form role="form" action="create-room" method="POST">
+          <input type="hidden" name="_csrf" value="<%= csrf_token %>">
 
-      <h3>Join a Room</h3>
-      <ul>
-        <% for (var i=0; i<rooms.length; i++) { %>
+          <div class="input-group">
+            <input type="text" class="form-control" name="create" placeholder="Room Name">
+            <span class="input-group-btn">
+              <button class="btn btn-primary" type="submit">Create a Room</button>
+            </span>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="row">
+      <h3>Available Rooms</h3>
+      <% if (rooms.length > 0) { %>
+        <ul>
+        <% for (var i=0; i < rooms.length; i++) { %>
           <li><a href="./room/<%= rooms[i].id %>"><%= rooms[i].name %></a></li>
         <% } %>
-      </ul>
+        </ul>
+      <% } else { %>
+        <p><em class="text-muted">No rooms available right now</em></p>
+      <% } %>
     </div>
   </div>
 

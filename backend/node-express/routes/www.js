@@ -6,7 +6,8 @@ module.exports = function(app){
   // Handle navigation to the index page
   app.get('/', function(req, res) {
     res.render('intro', {
-      title: 'Groops'
+      title: 'Groops',
+      csrf_token: req.csrfToken()
     });
   });
 
@@ -16,6 +17,7 @@ module.exports = function(app){
       res.render('main', {
         title: 'Groops List',
         user: req.session.user,
+        csrf_token: req.csrfToken(),
         rooms: []
       });
     }
