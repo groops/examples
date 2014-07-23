@@ -1,3 +1,9 @@
+/*********************************************************************
+ |
+ | This file is the entry point for the application.
+ | Set up all of the application dependencies first.
+ |
+ *********************************************************************/
 // Add some coloring to our console to make output more readable.
 require('colors');
 // Import the configuration
@@ -17,6 +23,13 @@ var session = require('express-session');
 // Prepare a MongoDB client
 var MongoConnection = require('./lib/db'), database;
 
+
+/*********************************************************************
+ |
+ | Next, create an instance of the Express server and configure
+ | any middleware that we want to use with it.
+ |
+ *********************************************************************/
 // Instantiate an instance of Express
 var app = express();
 
@@ -76,6 +89,12 @@ app.use(function (err, req, res, next) {
   });
 });
 
+
+/*********************************************************************
+ |
+ | Set up our database and connect to it
+ |
+ *********************************************************************/
 // Use environment variables for the configuration if available
 config.mongo.username = process.env.mongouser || config.mongo.username || '';
 config.mongo.password = process.env.mongopass || config.mongo.password || '';
@@ -83,7 +102,7 @@ config.mongo.host = process.env.mongoserver || config.mongo.host || '';
 config.mongo.port = process.env.mongoport || config.mongo.port || 33178;
 config.mongo.database = process.env.mongodb || config.mongo.database || 'groops';
 
-// 1. Establish a connection to the Mongo database
+// Establish a connection to the Mongo database
 database = new MongoConnection(config.mongo);
 database.connect(function(){
 
@@ -91,12 +110,19 @@ database.connect(function(){
   app.db = database;
   console.log(('Database:    '+(database.server+':'+database.port+'/'+database.database).bold).cyan);
 
-  // 2. Setup websockets
+  // Set up http server and websockets
   var http = require('http').Server(app);
   app.io = require('socket.io')(http);
+
+  // This is our websockets API module:
   require('./lib/ws.js')(app);
 
-  // 2. Launch the server
+
+/*********************************************************************
+ |
+ | Final step -- launch the web server
+ |
+ *********************************************************************/
   var server = http.listen(process.env.PORT||8000,function(){
     console.log('HTTP Server: '.green+('http://'+ip.address()+':'+server.address().port.toString()).bold.green+' in '.green+app.get('env').bold.yellow+' mode.'.green);
   });
