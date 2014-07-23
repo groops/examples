@@ -42,7 +42,9 @@ app.use(bodyParser.urlencoded({
 
 // Set up session (will be available in every request as `req.session`)
 app.use(session({
-  secret: 'groopy!'
+  secret: 'groopy!',
+  resave: true,
+  saveUninitialized: true
 }));
 
 // Configure Express to render EJS templates
