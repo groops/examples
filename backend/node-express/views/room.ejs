@@ -3,21 +3,105 @@
   <div id="room">
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
       <a href="/main" class="btn btn-sm btn-default" title="Back to list"><span class="glyphicon glyphicon-chevron-left"></span></a>
-      <span class="grp-room-name"><%= room.name %></span>
+      <span class="grp-room-name"><%= name %></span>
     </div>
 
     <div class="body">
-
+      <table id="messages" class="table table-striped">
+        <tbody>
+        <% for (var i=0; i < messages.length; i++) { %>
+          <tr>
+            <td><%= messages[i].content %></td>
+          </tr>
+        <% } %>
+        </tbody>
+      </table>
     </div>
 
     <div class="compose">
       <div class="input-group">
         <input type="text" class="form-control" name="message" placeholder="Type message...">
         <span class="input-group-btn">
-          <button class="btn btn-success" type="submit">Send</button>
+          <button id="send" class="btn btn-success" type="submit">Send</button>
         </span>
       </div>
     </div>
   </div>
+
+  <script>
+  function scrollBody() {
+    // alert($('#messages').height());
+    $('.body').animate({
+      scrollTop: $('#messages').height()
+    }, 200);
+  }
+
+  function postMessage(msg) {
+    msg = msg || $('input[name=message]').val();
+
+    if (msg) {
+      $.ajax({
+        url: '/api/room/<%= room_id %>/message',
+        method: 'POST',
+        context: this,
+        data: {
+          message: msg
+        }
+      })
+        .success(function (data) {
+          $('input[name=message]').val('');
+        });
+    }
+  }
+
+  $(function() {
+    scrollBody();
+
+    $('#send').on('click', function () {
+      postMessage();
+    });
+    $('input[name=message]').on('keydown', function (e) {
+      if (e.keyCode === 13 /* ENTER */) {
+        postMessage();
+      }
+    });
+
+    var socket = io();
+
+    // Join a room
+    socket.emit('join',{
+      room: '<%= room_id %>',
+      user: '<%= user_id %>'
+    });
+
+    // Once the user has joined a room, setup a proper communication channel
+    socket.on('joined',function(){
+
+      // When a message changes state, update the UI accordingly
+      socket.on('message',function(data){
+        if (data.action === 'create'){
+          console.log('Message created', data);
+          $('#messages > tbody:last').append('<tr><td>' + data.message.content + '</td></tr>');
+          scrollBody();
+        }
+      });
+
+      // When a user's status changes, update the UI accordingly
+      socket.on('user', function(data){
+        if (data.action === 'join'){
+          console.log('A new user joined the room', data);
+        }
+        else {
+          console.log('A user left the room', data);
+        }
+      });
+    });
+
+    // If there's an error, let the user know
+    socket.on('exception',function(msg){
+      alert(msg);
+    });
+  });
+  </script>
 
 <% include partials/footer %>
