@@ -32,13 +32,16 @@
   </div>
 
   <script>
+  // Tiny helper to keep the list scrolled to the bottom on each new message
   function scrollBody() {
-    // alert($('#messages').height());
     $('.body').animate({
       scrollTop: $('#messages').height()
     }, 200);
   }
 
+  // EJS auto-escaoes content rendered from the server, but since we
+  // are dynamically appending raw content in socket event handlers it's
+  // up to us to escape the content manually to avoid XSS and other nastiness.
   function htmlEscape(str) {
     return String(str)
       .replace(/&/g, '&amp;')
@@ -48,10 +51,13 @@
       .replace(/>/g, '&gt;');
   }
 
+  // Since this can be executed from multiple event handlers we pulled the
+  // logic for posting a message into its own helper function.
   function postMessage(msg) {
-    msg = msg || $('input[name=message]').val();
+    msg = $.trim(msg || $('input[name=message]').val());
 
-    if (msg) {
+    // It the message is blank skip
+    if (msg.length) {
       $.ajax({
         url: '/api/room/<%= room_id %>/message',
         method: 'POST',
@@ -62,37 +68,45 @@
         }
       })
         .success(function (data) {
+          // Clear the input for the next message
           $('input[name=message]').val('');
         });
+    }
+    else {
+      $('input[name=message]').val('');
     }
   }
 
   $(function() {
+    // Immediately scroll the list to the bottom on load
     scrollBody();
 
+    // Handle the "Send" button click event
     $('#send').on('click', function () {
       postMessage();
     });
+    // Handle the ENTER keydown event in the message input
     $('input[name=message]').on('keydown', function (e) {
       if (e.keyCode === 13 /* ENTER */) {
         postMessage();
       }
     });
 
+    // Init socket.io so that we're ready to handle events
     var socket = io();
 
-    // Join a room
-    socket.emit('join',{
+    // Notify the server (and other clients) that we have joined this room
+    socket.emit('join', {
       room: '<%= room_id %>',
       user: '<%= user_id %>'
     });
 
-    // Once the user has joined a room, setup a proper communication channel
-    socket.on('joined',function(){
+    // Once we have joined the room, set up a proper communication channel
+    socket.on('joined', function() {
 
       // When a message changes state, update the UI accordingly
-      socket.on('message',function(data){
-        if (data.action === 'create'){
+      socket.on('message', function(data) {
+        if (data.action === 'create') {
           console.log('Message created', data);
           var row = '<tr><td><img src="' + data.message.author.img +
             '" align="left" class="grp-gravatar">' +
@@ -104,7 +118,7 @@
         }
       });
 
-      // When a user's status changes, update the UI accordingly
+      // TODO: When a user's status changes, update the UI accordingly
       socket.on('user', function(data){
         if (data.action === 'join'){
           console.log('A new user joined the room', data);
@@ -115,7 +129,7 @@
       });
     });
 
-    // If there's an error, let the user know
+    // If there's an error, let the user know (ideally more nicely than this...)
     socket.on('exception',function(msg){
       alert(msg);
     });
