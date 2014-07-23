@@ -37,7 +37,8 @@ module.exports = function(app){
         created: new Date(),
         author: {
           id: req.body.author,
-          img: app.rooms[req.params.id][req.body.author].userdata.profilepic
+          img: app.rooms[req.params.id][req.body.author].userdata.profilepic,
+          name: app.rooms[req.params.id][req.body.author].userdata.name
         }
       };
 

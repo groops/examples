@@ -1,5 +1,25 @@
 <% include partials/header %>
 
+  <style>
+    #messages > tbody > tr > td {
+      position: relative;
+      padding: 10px 0 0 0;
+    }
+    #messages > tbody > tr > td > img {
+      margin-top: -8px;
+      margin-bottom: 2px;
+    }
+    #messages > tbody > tr > td:before {
+      position: absolute;
+      content: attr(data-user);
+      top: 0;
+      left: 53px;
+      font-size: 10px;
+      color: #ccc;
+
+    }
+  </style>
+
   <div id="room">
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
       <a href="/main" class="btn btn-sm btn-default" title="Back to list"><span class="glyphicon glyphicon-chevron-left"></span></a>
@@ -11,7 +31,7 @@
         <tbody>
         <% for (var i=0; i < messages.length; i++) { %>
           <tr>
-            <td><% if (messages[i].author !== undefined) { %><img src="<%= messages[i].author.img %>" align="left" style="margin-right: 8px;" height="45"/><% } %><%= messages[i].content %></td>
+            <td<% if (messages[i].author !== undefined) { %> data-user="<%= messages[i].author.name %>"<% } %>><% if (messages[i].author !== undefined) { %><img src="<%= messages[i].author.img %>" align="left" style="margin-right: 8px;" height="45"/><% } %><%= messages[i].content %></td>
           </tr>
         <% } %>
         </tbody>
@@ -82,7 +102,7 @@
       socket.on('message',function(data){
         if (data.action === 'create'){
           console.log('Message created', data);
-          $('#messages > tbody:last').append('<tr><td><img src="'+data.message.author.img+'" align="left" style="margin-right: 8px;" height="45"/>' + data.message.content + '</td></tr>');
+          $('#messages > tbody:last').append('<tr><td data-user="'+data.message.author.name+'"><img src="'+data.message.author.img+'" align="left" style="margin-right: 8px;" height="45"/>' + data.message.content + '</td></tr>');
           scrollBody();
         }
       });
