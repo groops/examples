@@ -14,8 +14,6 @@ var ip = require('ip');
 var path = require('path');
 // Set up in-memory session support
 var session = require('express-session');
-// Support for CSRF protection (https://github.com/expressjs/csurf)
-var csrf = require('csurf');
 // Prepare a MongoDB client
 var MongoConnection = require('./lib/db'), database;
 
@@ -40,9 +38,6 @@ app.set('view engine', 'ejs');
 
 // Support cookies
 app.use(cookieParser());
-
-// Init CSRF
-app.use(csrf());
 
 // Identify where static assets like raw HTML/CSS/JS/images/etc reside.
 app.use(express.static(path.join(__dirname, 'public')));
