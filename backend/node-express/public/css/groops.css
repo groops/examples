@@ -1,4 +1,9 @@
-
+thead td {
+  font-weight: bold;
+}
+td.centered {
+  text-align: center;
+}
 #main .grp-gravatar {
   height: 100;
   width: 100;
