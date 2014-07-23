@@ -40,13 +40,15 @@ module.exports = function(app){
 
   // Navigation to a specific room by id
   app.get('/room/:id', function(req, res) {
+    if (!req.session.user) {
+      return res.redirect('/main');
+    }
     if (req.params.id) {
       request.get(apiRoot + 'room/' + req.params.id, function(err, response, data) {
         if (err || response.statusCode === 500) {
           console.log('error getting room ' + req.params.id + ': ' + err || response.error);
           return res.redirect('/main');
         }
-        console.log(response.statusCode);
         if (response.statusCode === 404) {
           // Room id was not found, return to main view
           console.log('room not found: ' + req.params.id);
@@ -54,9 +56,18 @@ module.exports = function(app){
         }
         var room = JSON.parse(data);
 
-        res.render('room', {
-          title: 'Groop: ' + room.name,
-          room: room
+        request.get(apiRoot + 'room/' + req.params.id + '/messages', function(err, response, messages) {
+          if (err || response.statusCode === 500) {
+            console.log('error getting messages: ' + err || response.error);
+            return res.send(500, err);
+          }
+          res.render('room', {
+            title: 'Groop: ' + room.name,
+            user_id: req.session.user.id,
+            room_id: room.id,
+            name: room.name,
+            messages: JSON.parse(messages)
+          });
         });
       });
     }
