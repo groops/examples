@@ -60,3 +60,17 @@ td.centered {
 #room .compose button {
   border-radius: 0;
 }
+#messages td {
+  line-height: 16px;
+  padding: 6px;
+}
+#messages td .name {
+  font-size: 12px;
+  color: #aaa;
+}
+#messages td .grp-gravatar {
+  border-radius: 3px;
+  margin-right: 8px;
+  height: 40px;
+  width: 40px;
+}

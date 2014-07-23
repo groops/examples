@@ -1,25 +1,5 @@
 <% include partials/header %>
 
-  <style>
-    #messages > tbody > tr > td {
-      position: relative;
-      padding: 8px 6px 6px 6px;
-    }
-    #messages > tbody > tr > td > img {
-      margin-top: -2px;
-    }
-    #messages > tbody > tr > td:before {
-      position: absolute;
-      content: attr(data-user);
-      top: 0px;
-      left: 58px;
-      font-size: 9px;
-      color: #999;
-      clear: left;
-      display: block;
-    }
-  </style>
-
   <div id="room">
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
       <a href="/main" class="btn btn-sm btn-default" title="Back to list"><span class="glyphicon glyphicon-chevron-left"></span></a>
@@ -31,7 +11,10 @@
         <tbody>
         <% for (var i=0; i < messages.length; i++) { %>
           <tr>
-            <td<% if (messages[i].author !== undefined) { %> data-user="<%= messages[i].author.name %>"<% } %>><% if (messages[i].author !== undefined) { %><img src="<%= messages[i].author.img %>" align="left" style="margin-right: 8px;" height="45"/><% } %><%= messages[i].content %></td>
+            <td>
+              <img src="<%= messages[i].author.img %>" align="left" class="grp-gravatar">
+              <%= messages[i].content %><br><span class="name"><%= messages[i].author.name %></span>
+            </td>
           </tr>
         <% } %>
         </tbody>
@@ -54,6 +37,15 @@
     $('.body').animate({
       scrollTop: $('#messages').height()
     }, 200);
+  }
+
+  function htmlEscape(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
   }
 
   function postMessage(msg) {
@@ -102,7 +94,12 @@
       socket.on('message',function(data){
         if (data.action === 'create'){
           console.log('Message created', data);
-          $('#messages > tbody:last').append('<tr><td data-user="'+data.message.author.name+'"><img src="'+data.message.author.img+'" align="left" style="margin-right: 8px;" height="45"/>' + data.message.content + '</td></tr>');
+          var row = '<tr><td><img src="' + data.message.author.img +
+            '" align="left" class="grp-gravatar">' +
+            htmlEscape(data.message.content) + '<br><span class="name">' +
+            htmlEscape(data.message.author.name) + '</span></td></tr>';
+
+          $('#messages > tbody:last').append(row);
           scrollBody();
         }
       });
