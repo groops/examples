@@ -27,6 +27,10 @@ module.exports = function(app){
       // If there is an error, send a 500 and error message.
       if (err) { return res.send(500,{error:err.message}); }
 
+      if (!doc) {
+        // No matching room found in the db
+        return res.send(404);
+      }
       // Cleanup
       doc.id = doc._id;
       delete doc._id;
