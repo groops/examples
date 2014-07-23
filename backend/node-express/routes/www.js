@@ -81,7 +81,9 @@ module.exports = function(app){
   app.post('/register', function(req, res) {
     var userInfo = req.body;
 
-    // console.log(userInfo);
+    if (userInfo.twitter) {
+      userInfo.twitter = userInfo.twitter.replace('@','');
+    }
 
     request.post(apiRoot + 'user', {
       form: userInfo
