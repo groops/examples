@@ -11,7 +11,7 @@
         <p><strong><%= user.name %></strong></p>
         <p><%= user.email %></p>
         <% if (user.twitter) { %>
-          <p>@<%= user.twitter %></p>
+          <p><a href="https://twitter.com/<%= user.twitter %>" target="blank">@<%= user.twitter %></a></p>
         <% } %>
       </div>
     </div>
