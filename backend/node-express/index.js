@@ -27,7 +27,7 @@ var MongoConnection = require('./lib/db'), database;
 /*********************************************************************
  |
  | Next, create an instance of the Express server and configure
- | any middleware that we want to use with it.
+ | any standard middleware that we want to use with it.
  |
  *********************************************************************/
 // Instantiate an instance of Express
@@ -60,10 +60,27 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Identify whether the app will run in development or production mode. Defaults to production.
 app.set('env', process.env.ENV || config.mode || 'production');
 
-// Include our custom routes for the API and template server
-require('./routes/api')(app);
-require('./routes/www')(app);
 
+/*********************************************************************
+ |
+ | Tell Express where our route handling is located. This is the key
+ | code that links the Express server with our application code.
+ | Any requests that match a defined route pattern will be handled
+ | by the associated applciation controller code.
+ |
+ *********************************************************************/
+// require('./routes/api')(app);
+// require('./routes/www')(app);
+require('./router')(app);
+
+
+/*********************************************************************
+ |
+ | You can also define your own middleware functions and hook
+ | them into the Express request pipeline for defining global
+ | request behavior using your own custom logic.
+ |
+ *********************************************************************/
 // Catch 404 and forward to error handler
 app.use(function (req, res, next) {
   var err = new Error('Not Found');

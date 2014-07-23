@@ -11,7 +11,7 @@
         <tbody>
         <% for (var i=0; i < messages.length; i++) { %>
           <tr>
-            <td><%= messages[i].content %></td>
+            <td><% if (messages[i].author !== undefined) { %><img src="<%= messages[i].author.img %>" align="left" style="margin-right: 8px;" height="45"/><% } %><%= messages[i].content %></td>
           </tr>
         <% } %>
         </tbody>
@@ -82,7 +82,7 @@
       socket.on('message',function(data){
         if (data.action === 'create'){
           console.log('Message created', data);
-          $('#messages > tbody:last').append('<tr><td><img src="'+data.message.author.pic+'" align="left" style="margin-right: 8px;" height="60"/>' + data.message.content + '</td></tr>');
+          $('#messages > tbody:last').append('<tr><td><img src="'+data.message.author.img+'" align="left" style="margin-right: 8px;" height="45"/>' + data.message.content + '</td></tr>');
           scrollBody();
         }
       });
