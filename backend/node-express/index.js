@@ -23,6 +23,7 @@ var session = require('express-session');
 // Prepare a MongoDB client
 var MongoConnection = require('./lib/db'), database;
 
+console.log('\nInitializing Groops...'.magenta);
 
 /*********************************************************************
  |
@@ -69,8 +70,6 @@ app.set('env', process.env.ENV || config.mode || 'production');
  | by the associated applciation controller code.
  |
  *********************************************************************/
-// require('./routes/api')(app);
-// require('./routes/www')(app);
 require('./router')(app);
 
 
@@ -121,6 +120,12 @@ config.mongo.host = process.env.mongoserver || config.mongo.host || '';
 config.mongo.port = process.env.mongoport || config.mongo.port || 33178;
 config.mongo.database = process.env.mongodb || config.mongo.database || 'groops';
 
+// Sanity check that we have valid db configs
+if (!config.mongo.username.length || !config.mongo.password.length || !config.mongo.host.length) {
+  console.log('Oops, your database is not configured! Please see the README for details'.red);
+  process.exit(0);
+}
+
 // Establish a connection to the Mongo database
 database = new MongoConnection(config.mongo);
 database.connect(function(){
@@ -143,6 +148,7 @@ database.connect(function(){
  |
  *********************************************************************/
   var server = http.listen(process.env.PORT||8000,function(){
-    console.log('HTTP Server: '.green+('http://'+ip.address()+':'+server.address().port.toString()).bold.green+' in '.green+app.get('env').bold.yellow+' mode.'.green);
+    console.log('HTTP Server: '.green+('http://'+ip.address()+':'+server.address().port.toString()).bold.green+' in '.green+app.get('env').bold.yellow+' mode'.green);
+    console.log('Groops is ready, waiting for clients...'.green);
   });
 });
