@@ -21,9 +21,10 @@ var Class = function(config){
 
   this.connect = function(callback) {
     mongoclient.connect('mongodb://'+this.username+':'+this.password+'@'+this.server+':'+this.port.toString()+'/'+this.database, { auto_reconnect: true }, function(err, db){
-
-      if(err) throw err;
-
+      if (err) {
+        console.log('Could not connect to Mongo: ' + err);
+        process.exit(0);
+      }
       me.emit('connected');
 
       // Access or create a collection.
