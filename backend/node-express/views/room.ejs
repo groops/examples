@@ -107,7 +107,7 @@
       // When a message changes state, update the UI accordingly
       socket.on('message', function(data) {
         if (data.action === 'create') {
-          console.log('Message created', data);
+          // console.log('Message created', data);
           var row = '<tr><td><img src="' + data.message.author.img +
             '" align="left" class="grp-gravatar">' +
             htmlEscape(data.message.content) + '<br><span class="name">' +
