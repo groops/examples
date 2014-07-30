@@ -25,13 +25,17 @@ Once you have a database ready to go, open up `config.json` and edit the databas
 
 Should be obvious, but you'll need these. Nowadays it's pretty simple &mdash; Joyent publishes installation packages for all major platforms at [nodejs.org](http://nodejs.org/download/), so just grab the appropriate version and install it. Npm comes bundled with Node, so after the install you should be good to go.
 
-### 3. Configure the application
+### 3. Get the project code
 
-The great thing about most Node modules and applications is that dependencies are stored in `package.json`, so all you need to do is install them. Open your favorite terminal and run:
+Use your preferred method for pulling down this project from Github. Feel free to [fork](https://github.com/groops/examples/fork) if you would like to potentially contribute back to the project, or you could simply clone the repo locally (git@github.com:groops/examples.git). Either way, you should end up with something along the lines of `C:\projects\groops\` or `~/my cool stuff/groops` with the repo code under that.
+
+### 4. Configure the application
+
+The great thing about most Node modules and applications is that dependencies are stored in `package.json`, so all you need to do is install them. Open your favorite terminal, navigate to the root of the project folder from step 3 (wherever the `package.json` file is) and run:
 
     npm install
 
-### 4. Run it
+### 5. Run it
 
 If all went well, the app should now "just work" &trade;:
 
