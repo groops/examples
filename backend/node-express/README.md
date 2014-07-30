@@ -37,7 +37,7 @@ The great thing about most Node modules and applications is that dependencies ar
 
 ### 5. Run it
 
-If all went well, the app should now "just work" &trade;:
+If all went well, you should up with a shiny new `node_modules` folder loaded with stuff. Assuming you had no npm errors, the app should now "just work" &trade;:
 
     node index
 
