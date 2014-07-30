@@ -4,7 +4,7 @@
 
 ### 1. Configure the database
 
-Before you can run the app you need to set up a Mongo database. This can be any Mongo instance (including on running locally), although if you need a simple hosted option, create a free account at [MongoLab](https://mongolab.com/) or [MongoHQ](https://www.mongohq.com/) and create an empty database (called "groops" or similar).
+Before you can run the app you need to set up a Mongo database. This can be any Mongo instance (including one running locally), although if you need a simple hosted option, create a free account at [MongoLab](https://mongolab.com/) or [MongoHQ](https://www.mongohq.com/) and create an empty database (called "groops" or similar).
 
 Once you have a database ready to go, open up `config.json` and edit the database config section as needed. When you're done, it should look something like this (example MongoLab config):
 
