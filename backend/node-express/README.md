@@ -41,6 +41,8 @@ If all went well, you should up with a shiny new `node_modules` folder loaded wi
 
     node index
 
+Once the server is running, point your browser to [http://localhost:8000/](http://localhost:8000/) and experience the magic.
+
 Problems? Suggestions? Bugs? [Let us know](https://github.com/groops/examples/issues).
 
-Pull requests always welcome.
+**Pull requests always welcome.**
