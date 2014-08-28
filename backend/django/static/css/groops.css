@@ -1,0 +1,77 @@
+/*
+ General styles and bootstrap overrides
+ */
+thead td {
+  font-weight: bold;
+}
+td.centered {
+  text-align: center;
+}
+.container {
+  padding-left: 35px;
+  padding-right: 35px;
+}
+
+/*
+ Main view
+ */
+#main .grp-gravatar {
+  height: 100;
+  width: 100;
+  float: left;
+  border-radius: 5px;
+}
+
+/*
+ Room view
+ */
+#room .navbar-default {
+  background: #deeaf3;
+  padding: 3px 5px 5px;
+  min-height: 40px;
+  height: 40px;
+  color: #555;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: static;
+}
+#room .grp-room-name {
+  font-size: 20px;
+  font-weight: bold;
+  padding-left: 5px;
+}
+#room .body {
+  position: absolute;
+  width: 100%;
+  top: 40px;
+  bottom: 35px;
+  overflow-x: none;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+#room .compose {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+#room .compose input,
+#room .compose button {
+  border-radius: 0;
+}
+#messages td {
+  line-height: 18px;
+  padding: 6px;
+  font-size: 15px;
+}
+#messages td .name {
+  font-size: 12px;
+  color: #aaa;
+}
+#messages td .grp-gravatar {
+  border-radius: 3px;
+  margin-right: 8px;
+  height: 40px;
+  width: 40px;
+}
